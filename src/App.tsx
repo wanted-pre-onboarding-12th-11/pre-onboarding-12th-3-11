@@ -1,7 +1,7 @@
-import './App.css';
+import MainPage from 'containers/SearchContainer';
 
 const App = () => {
-    return <div>react</div>;
+    return <MainPage />;
 };
 
 export default App;
