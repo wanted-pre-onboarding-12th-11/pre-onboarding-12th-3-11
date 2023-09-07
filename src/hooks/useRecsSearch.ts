@@ -1,8 +1,9 @@
 import axios, {AxiosError} from 'axios';
-import {MAX_SEARCH_LENGTH} from 'constants/constants';
+import {EXPIRE_TIME, MAX_SEARCH_LENGTH} from 'constants/constants';
 import {useCallback, useReducer} from 'react';
 import {searchItemType} from 'types/search';
 import * as API from 'apis/search';
+import CacheStore from 'utils/cache';
 
 interface TypeSearchState {
     data: searchItemType[];
@@ -37,22 +38,26 @@ const reducer = (state: TypeSearchState, action: TypeAction) => {
             return state;
     }
 };
+const cacheStorage = new CacheStore('test_1', EXPIRE_TIME);
 
 const useRecsSearch = () => {
     const [state, dispatch] = useReducer(reducer, initState);
 
-    const getRecsSearch = useCallback((queryKey: string, expireTime: number) => {
-        const fetchData = async () => {
-            try {
-                const res = await API.getRecsSearch(queryKey);
-                dispatch({type: 'GET', payload: res.data});
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    dispatch({type: 'ERROR', payload: error});
-                } else console.error(error);
-            }
-        };
-        fetchData();
+    const getRecsSearch = useCallback(async (queryKey: string, expireTime: number) => {
+        const cachedData = await cacheStorage.match(queryKey);
+        if (cachedData) {
+            return dispatch({type: 'GET', payload: cachedData.data});
+        }
+
+        try {
+            const res = await API.getRecsSearch(queryKey);
+            await cacheStorage.put(queryKey, res);
+            dispatch({type: 'GET', payload: res.data});
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                dispatch({type: 'ERROR', payload: error});
+            } else console.error(error);
+        }
     }, []);
 
     return {state, getRecsSearch};
