@@ -55,6 +55,7 @@ const SearchContainer = () => {
                     </button>
                 </SearchBarContainer>
                 <RecommendContainer>
+                    <RecsSearch title={value} />
                     <SectionTitle>추천 검색어</SectionTitle>
                     {isLoading && <LoadingSpinner />}
                     {error && <div>에러 !!</div>}
@@ -65,6 +66,7 @@ const SearchContainer = () => {
                                     title={item.sickNm}
                                     key={item.sickCd}
                                     selected={keyBoardFocusingIdx === index}
+                                    searchValue={value}
                                 />
                             );
                         })
