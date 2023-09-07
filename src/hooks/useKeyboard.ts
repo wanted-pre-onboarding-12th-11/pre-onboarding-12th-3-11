@@ -21,7 +21,6 @@ const useKeyboard = (dataLength: number): TypeFocusingHook => {
             }
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                console.info(keyBoardFocusingIdx);
                 if (keyBoardFocusingIdx === 0) {
                     setKeyboardFocusingIdx(null);
                 } else if (keyBoardFocusingIdx !== null && keyBoardFocusingIdx > 0) {

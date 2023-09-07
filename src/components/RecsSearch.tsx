@@ -34,7 +34,6 @@ const RecommendItem = styled.div`
     padding: 10px 20px;
     display: flex;
     align-items: center;
-    /* font-weight: 600; */
     cursor: pointer;
     &:hover,
     &.selected {
