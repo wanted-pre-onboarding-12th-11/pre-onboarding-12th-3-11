@@ -7,13 +7,15 @@ const SearchContainer = () => {
                 <HomeHeader>
                     국내 모든 임상실험 검색하고 <br /> 온라인으로 참여하기
                 </HomeHeader>
-                <SearchBarContainer>
-                    <input />
-                    <button>버튼</button>
-                </SearchBarContainer>
-                <RecommendContainer>
-                    <SectionTitle>추천 검색어</SectionTitle>
-                </RecommendContainer>
+                <SearchSection>
+                    <SearchBarContainer>
+                        <input />
+                        <button>버튼</button>
+                    </SearchBarContainer>
+                    <RecommendContainer>
+                        <SectionTitle>추천 검색어</SectionTitle>
+                    </RecommendContainer>
+                </SearchSection>
             </HomeContainer>
         </>
     );
@@ -34,6 +36,13 @@ const HomeHeader = styled.h1`
     font-weight: 800;
     line-height: 1.6;
     margin-bottom: 20px;
+`;
+const SearchSection = styled.section`
+    &:has(input:focus) {
+        & > div {
+            display: block;
+        }
+    }
 `;
 const SearchBarContainer = styled.form`
     width: 490px;
@@ -65,6 +74,7 @@ const SearchBarContainer = styled.form`
 `;
 
 const RecommendContainer = styled.div`
+    display: none;
     padding: 20px 0;
     margin-top: 5px;
     width: 490px;
