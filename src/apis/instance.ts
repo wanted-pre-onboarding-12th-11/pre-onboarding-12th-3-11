@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {BASE_URL} from 'constants/constants';
 
 class AxiosInstance {
     baseUrl: string;
@@ -12,6 +13,6 @@ class AxiosInstance {
     }
 }
 
-const httpClient = new AxiosInstance(process.env.REACT_APP_SEARCH_BASE_URL || '');
+const httpClient = new AxiosInstance(BASE_URL || '');
 
 export const searchAPI = httpClient.instance('/sick');
