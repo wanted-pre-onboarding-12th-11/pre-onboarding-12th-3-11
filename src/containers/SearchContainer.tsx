@@ -7,7 +7,7 @@ import useKeyboard from 'hooks/useKeyboard';
 import useRecsSearch from 'hooks/useRecsSearch';
 import {useState} from 'react';
 import styled from 'styled-components';
-import {isValidKeyword} from 'utils/regex';
+import {replaceValidKeyword} from 'utils/regex';
 
 const SearchContainer = () => {
     const [value, setValue] = useState('');
@@ -22,7 +22,7 @@ const SearchContainer = () => {
 
         if (value.length) {
             debounce(() => {
-                isValidKeyword(value) && getRecsSearch(value, EXPIRE_TIME);
+                getRecsSearch(replaceValidKeyword(value), EXPIRE_TIME);
             }, INPUT_DEBOUNCE_TIME);
         } else {
             initSearchState();
@@ -62,7 +62,7 @@ const SearchContainer = () => {
                     <RecsSearch title={value} />
                     <SectionTitle>추천 검색어</SectionTitle>
                     {isLoading && <LoadingSpinner />}
-                    {error && <div>에러 !!</div>}
+
                     {data.length !== 0 && !isLoading && value ? (
                         data.map((item, index) => {
                             return (
@@ -75,7 +75,13 @@ const SearchContainer = () => {
                             );
                         })
                     ) : (
-                        <div className='noRecommend'>추천 검색어가 없습니다.</div>
+                        <>
+                            {error ? (
+                                <div className='noRecommend'>데이터를 가져오는데 실패했습니다.</div>
+                            ) : (
+                                <div className='noRecommend'>추천 검색어가 없습니다.</div>
+                            )}
+                        </>
                     )}
                 </RecommendContainer>
             </SearchSection>
