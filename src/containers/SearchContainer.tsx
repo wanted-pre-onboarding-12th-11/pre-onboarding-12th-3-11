@@ -1,6 +1,26 @@
+import RecsSearch from 'components/RecsSearch';
+import SearchIcon from 'components/icons/searchIcon';
+import {EXPIRE_TIME, INPUT_DEBOUNCE_TIME} from 'constants/constants';
+import useDebounce from 'hooks/useDebounce';
+import useRecsSearch from 'hooks/useRecsSearch';
+import {useState} from 'react';
 import styled from 'styled-components';
+import {isValidKeyword} from 'utils/regex';
 
 const SearchContainer = () => {
+    const [value, setValue] = useState('');
+    const debounce = useDebounce();
+    const {state, getRecsSearch} = useRecsSearch();
+    const {data, isLoading, error} = state;
+
+    const handleInputValue = (value: string) => {
+        setValue(value);
+        if (value.length) {
+            debounce(() => {
+                isValidKeyword(value) && getRecsSearch(value, EXPIRE_TIME);
+            }, INPUT_DEBOUNCE_TIME);
+        }
+    };
     return (
         <>
             <HomeContainer>
@@ -9,11 +29,26 @@ const SearchContainer = () => {
                 </HomeHeader>
                 <SearchSection>
                     <SearchBarContainer>
-                        <input />
-                        <button>버튼</button>
+                        <SearchIcon size={21} />
+                        <input
+                            value={value}
+                            type='text'
+                            onChange={event => handleInputValue(event.target.value)}
+                            placeholder='질환명을 입력해 주세요.'
+                        />
+                        <button>
+                            <SearchIcon size={16} />
+                        </button>
                     </SearchBarContainer>
                     <RecommendContainer>
                         <SectionTitle>추천 검색어</SectionTitle>
+                        {data.length !== 0 ? (
+                            data.map(item => {
+                                return <RecsSearch title={item.sickNm} key={item.sickCd} />;
+                            })
+                        ) : (
+                            <div className='noRecommend'>추천 검색어가 없습니다.</div>
+                        )}
                     </RecommendContainer>
                 </SearchSection>
             </HomeContainer>
@@ -61,15 +96,17 @@ const SearchBarContainer = styled.form`
         outline: none;
     }
     button {
-        border: none;
-        border-radius: 50%;
+        color: #ffffff;
+        background-color: #007be9;
+        border: 0;
+        cursor: pointer;
+        border-radius: 100%;
         width: 48px;
         height: 48px;
-        padding-left: 10px;
+        font-weight: 500;
         display: flex;
+        justify-content: center;
         align-items: center;
-        background-color: #007be9;
-        cursor: pointer;
     }
 `;
 
