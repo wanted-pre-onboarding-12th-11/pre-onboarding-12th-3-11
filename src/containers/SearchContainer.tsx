@@ -1,7 +1,9 @@
+import LoadingSpinner from 'components/LoadingSpinner';
 import RecsSearch from 'components/RecsSearch';
 import SearchIcon from 'components/icons/searchIcon';
 import {EXPIRE_TIME, INPUT_DEBOUNCE_TIME} from 'constants/constants';
 import useDebounce from 'hooks/useDebounce';
+import useKeyboard from 'hooks/useKeyboard';
 import useRecsSearch from 'hooks/useRecsSearch';
 import {useState} from 'react';
 import styled from 'styled-components';
@@ -12,47 +14,66 @@ const SearchContainer = () => {
     const debounce = useDebounce();
     const {state, getRecsSearch} = useRecsSearch();
     const {data, isLoading, error} = state;
-
+    const {onKeydownFocusing, keyBoardFocusingIdx, initFocusingIdx} = useKeyboard(data.length);
+    const searchKeyword = keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
     const handleInputValue = (value: string) => {
         setValue(value);
+        initFocusingIdx();
         if (value.length) {
             debounce(() => {
                 isValidKeyword(value) && getRecsSearch(value, EXPIRE_TIME);
             }, INPUT_DEBOUNCE_TIME);
         }
     };
+    const handleInputKeydown = (e: React.KeyboardEvent) => {
+        onKeydownFocusing(e);
+    };
+    const handleOnSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        console.info(searchKeyword);
+        initFocusingIdx();
+    };
+
     return (
-        <>
-            <HomeContainer>
-                <HomeHeader>
-                    국내 모든 임상실험 검색하고 <br /> 온라인으로 참여하기
-                </HomeHeader>
-                <SearchSection>
-                    <SearchBarContainer>
-                        <SearchIcon size={21} />
-                        <input
-                            value={value}
-                            type='text'
-                            onChange={event => handleInputValue(event.target.value)}
-                            placeholder='질환명을 입력해 주세요.'
-                        />
-                        <button>
-                            <SearchIcon size={16} />
-                        </button>
-                    </SearchBarContainer>
-                    <RecommendContainer>
-                        <SectionTitle>추천 검색어</SectionTitle>
-                        {data.length !== 0 ? (
-                            data.map(item => {
-                                return <RecsSearch title={item.sickNm} key={item.sickCd} />;
-                            })
-                        ) : (
-                            <div className='noRecommend'>추천 검색어가 없습니다.</div>
-                        )}
-                    </RecommendContainer>
-                </SearchSection>
-            </HomeContainer>
-        </>
+        <HomeContainer>
+            <HomeHeader>
+                국내 모든 임상실험 검색하고 <br /> 온라인으로 참여하기
+            </HomeHeader>
+            <SearchSection>
+                <SearchBarContainer onSubmit={handleOnSubmit}>
+                    <SearchIcon size={21} />
+                    <input
+                        value={value}
+                        type='text'
+                        onChange={event => handleInputValue(event.target.value)}
+                        onKeyDown={event => handleInputKeydown(event)}
+                        placeholder='질환명을 입력해 주세요.'
+                    />
+                    <button type='submit'>
+                        <SearchIcon size={16} />
+                    </button>
+                </SearchBarContainer>
+                <RecommendContainer>
+                    <SectionTitle>추천 검색어</SectionTitle>
+                    {isLoading && <LoadingSpinner />}
+                    {error && <div>에러 !!</div>}
+                    {data.length !== 0 && !isLoading ? (
+                        data.map((item, index) => {
+                            return (
+                                <RecsSearch
+                                    title={item.sickNm}
+                                    key={item.sickCd}
+                                    selected={keyBoardFocusingIdx === index}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div className='noRecommend'>추천 검색어가 없습니다.</div>
+                    )}
+                </RecommendContainer>
+            </SearchSection>
+        </HomeContainer>
     );
 };
 
