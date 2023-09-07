@@ -38,7 +38,7 @@ const reducer = (state: TypeSearchState, action: TypeAction) => {
             return state;
     }
 };
-const cacheStorage = new CacheStore('test_1', EXPIRE_TIME);
+const cacheStorage = new CacheStore('searchCache', EXPIRE_TIME);
 
 const useRecsSearch = () => {
     const [state, dispatch] = useReducer(reducer, initState);
@@ -48,7 +48,6 @@ const useRecsSearch = () => {
         if (cachedData) {
             return dispatch({type: 'GET', payload: cachedData.data});
         }
-
         try {
             const res = await API.getRecsSearch(queryKey);
             await cacheStorage.put(queryKey, res);
@@ -60,7 +59,11 @@ const useRecsSearch = () => {
         }
     }, []);
 
-    return {state, getRecsSearch};
+    const initSearchState = () => {
+        return dispatch({type: 'INIT'});
+    };
+
+    return {state, getRecsSearch, initSearchState};
 };
 
 export default useRecsSearch;

@@ -12,17 +12,20 @@ import {isValidKeyword} from 'utils/regex';
 const SearchContainer = () => {
     const [value, setValue] = useState('');
     const debounce = useDebounce();
-    const {state, getRecsSearch} = useRecsSearch();
+    const {state, getRecsSearch, initSearchState} = useRecsSearch();
     const {data, isLoading, error} = state;
     const {onKeydownFocusing, keyBoardFocusingIdx, initFocusingIdx} = useKeyboard(data.length);
     const searchKeyword = keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
     const handleInputValue = (value: string) => {
         setValue(value);
         initFocusingIdx();
+
         if (value.length) {
             debounce(() => {
                 isValidKeyword(value) && getRecsSearch(value, EXPIRE_TIME);
             }, INPUT_DEBOUNCE_TIME);
+        } else {
+            initSearchState();
         }
     };
     const handleInputKeydown = (e: React.KeyboardEvent) => {
@@ -30,8 +33,9 @@ const SearchContainer = () => {
     };
     const handleOnSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        console.info(searchKeyword);
+        setValue('');
+        alert(`검색결과: ${searchKeyword}`);
+        initSearchState();
         initFocusingIdx();
     };
 
@@ -59,7 +63,7 @@ const SearchContainer = () => {
                     <SectionTitle>추천 검색어</SectionTitle>
                     {isLoading && <LoadingSpinner />}
                     {error && <div>에러 !!</div>}
-                    {data.length !== 0 && !isLoading ? (
+                    {data.length !== 0 && !isLoading && value ? (
                         data.map((item, index) => {
                             return (
                                 <RecsSearch
