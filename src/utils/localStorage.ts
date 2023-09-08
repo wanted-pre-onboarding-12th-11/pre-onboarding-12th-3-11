@@ -17,7 +17,7 @@ export class LocalStorage {
         try {
             return JSON.stringify(localStorage.setItem(this.key, value));
         } catch (e) {
-            console.error('유효하지 않은 key, value 값 추가');
+            console.error('유효하지 않은 value 값 추가');
             this.setItem('');
         }
     }

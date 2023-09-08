@@ -58,12 +58,17 @@ export const openCache = () => {
 };
 
 export const isExpired = (cacheDataInfo: InterfaceNode) => {
-    const {createdAt, expireTime} = cacheDataInfo;
-    const currentTime = getCurrentTime();
-    if (createdAt && expireTime && currentTime - createdAt > expireTime) {
-        return true;
+    try {
+        const {createdAt, expireTime} = cacheDataInfo;
+        const currentTime = getCurrentTime();
+        if (createdAt && expireTime && currentTime - createdAt > expireTime) {
+            return true;
+        }
+        return false;
+    } catch (e) {
+        console.error('만료시간 확인 불가, 스토리지 재오픈');
+        openCache();
     }
-    return false;
 };
 
 export const insertCache = (string: string, cacheInfo: TypeCacheInfo) => {
@@ -104,7 +109,7 @@ export const insertCache = (string: string, cacheInfo: TypeCacheInfo) => {
             searchCacheStorage.setItem(JSON.stringify(newCache));
         }
     } catch (e) {
-        console.error('캐시 순회 불가');
+        console.error('캐시 순회 불가, 스토리지 재 오픈');
         openCache();
     }
 };
@@ -133,45 +138,50 @@ const getMostSimilar = (string: string) => {
         }
         return currentNode;
     } catch (e) {
-        console.error('캐시 순회 불가');
+        console.error('캐시 순회 불가, 스토리지 재 오픈');
         openCache();
     }
 };
 
 export const getCacheData = (string: string) => {
-    const lowerCaseString = string.toLowerCase();
-    const similarNode = getMostSimilar(lowerCaseString);
-    const similarData = similarNode?.data;
+    try {
+        const lowerCaseString = string.toLowerCase();
+        const similarNode = getMostSimilar(lowerCaseString);
+        const similarData = similarNode?.data;
 
-    const isNothingSimilar = similarNode?.value === '';
-    const isSimilarNodeEmpty = similarData === null;
-    const isSimilarHavingData = similarData;
-    const isSameNodeValue = similarNode?.value === lowerCaseString;
+        const isNothingSimilar = similarNode?.value === '';
+        const isSimilarNodeEmpty = similarData === null;
+        const isSimilarHavingData = similarData;
+        const isSameNodeValue = similarNode?.value === lowerCaseString;
 
-    if (isNothingSimilar) {
-        return false;
-    }
-
-    if (isSimilarNodeEmpty) {
-        return false;
-    }
-
-    if (isSimilarHavingData) {
-        if (isExpired(similarNode)) {
+        if (isNothingSimilar) {
             return false;
-        } else {
-            if (isSameNodeValue) {
-                return similarNode.data;
-            }
-            const newData = similarData.filter((rec: Type.searchItemType) =>
-                rec.sickNm.toLowerCase().includes(lowerCaseString)
-            );
-
-            insertCache(lowerCaseString, {data: newData, expireTime: similarNode.expireTime});
-
-            return newData;
         }
-    }
 
-    return false;
+        if (isSimilarNodeEmpty) {
+            return false;
+        }
+
+        if (isSimilarHavingData) {
+            if (isExpired(similarNode)) {
+                return false;
+            } else {
+                if (isSameNodeValue) {
+                    return similarNode.data;
+                }
+                const newData = similarData.filter((rec: Type.searchItemType) =>
+                    rec.sickNm.toLowerCase().includes(lowerCaseString)
+                );
+
+                insertCache(lowerCaseString, {data: newData, expireTime: similarNode.expireTime});
+
+                return newData;
+            }
+        }
+
+        return false;
+    } catch (e) {
+        console.error('캐시 존재여부 확인 불가, 스토리지 재오픈');
+        openCache();
+    }
 };
