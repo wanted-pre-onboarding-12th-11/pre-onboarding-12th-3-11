@@ -74,37 +74,95 @@
 
 ### 1. 로컬 캐싱 구현 방법
 - **로컬 캐싱을 구현 목표** - 로컬캐싱을 활용하여 `API 호출 횟수`를 줄인다.
-  
+
+<br/>
+
 - **API 호출 횟수 줄이는 방법**
-    1. 사용자가 입력한 검색어 값을 `key`로 활용, 받아 온 데이터를 `value`의 형태로 저장한 후 동일한 값이 입력 되었을 때 해당 key 값으로 데이터를 찾아 클라이언트 데이터 상태를 업데이트합니다.
-    2. 사용자가 입력한 검색어 값이 캐싱 된 `key + “…”` 이라면 캐싱 된 key의 `데이터를 가공/필터링`하여 `재캐싱`하고 상태를 업데이트 합니다.
-        - [예시]
+  - 사용자가 입력한 검색어 값을 `key`로 활용, 받아 온 데이터를 `value`의 형태로 저장한 후 동일한 값이 입력 되었을 때 해당 key 값으로 데이터를 찾아 클라이언트 데이터 상태를 업데이트합니다.
+  - 사용자가 입력한 검색어 문자열이 `이미 캐싱 된 key + “…”` 형태라면 캐싱 된 key의 `데이터를 가공/필터링`하여 `재캐싱`하고 상태를 업데이트 합니다.
+    - [예시]
         1. 사용자 입력 값 (`key`) : `“감”`, 캐싱 된 값(`value`) : `[”감염”, “감염성”, “감시”]`
         2. 사용자 입력 값 (`key`)  : `“감염”` ⇒ key `“감”`의 value를 필터링한 값인 `[”감염”, “감염성”]`를 `“감시”`: `[”감염”, “감염성”]`으로 재 캐싱합니다.
         - 해당 탐색을 효율적으로 하기 위하여 `Trie` 자료구조를 활용해 캐싱하고 데이터를 찾습니다.
-    3. 브라우저 캐싱을 활용하여 같은 브라우저를 사용한다면 재접속 할 경우 캐시 데이터 기반으로 데이터를 불러올 수 있도록 합니다.
-    4. 영문 입력 시 `소문자로 변환`하여 key 값을 찾고, 추가/비교 하여 대소문자 구분 없이 캐시 된 값을 활용할 수 있습니다.
-       
+  - 브라우저 캐싱을 활용하여 같은 브라우저를 사용한다면 재접속 할 경우 캐시 데이터 기반으로 데이터를 불러올 수 있도록 합니다.
+  - 영문 입력 시 `소문자로 변환`하여 key 값을 찾고, 추가/비교 하여 대소문자 구분 없이 캐시 된 값을 활용할 수 있습니다.
+<details>
+  <summary><b>👈코드 보기</b></summary>
+    <div markdown="1">
+        <ul>
+https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L117-L187
+        </ul>
+    </div>
+</details>
+
+<br/>      
+ 
 - **저장소의 메모리를 효율적으로 사용하기 위해 고려한 방법**
     - 시간 복잡도 측면에서 강점이 있으나 `메모리 부분에 취약한 Trie 자료구조`를 사용하고, 캐시가 오래 유지되지만 `용량 제한이 있는 로컬 스토리지`를 사용하기 때문에 어떻게 메모리를 효율적으로 관리할지 고민이 필요했습니다.
         - 가비지 컬렉팅 - Trie 자료구조에 새로운 데이터를 추가 할 경우 expireTime과 createdAt 속성을 추가하고, 객체의 루트 부터 인서트 되기 전 노드 까지 `순회 할 때 expireTime`을 확인하여 만료 된 캐시 데이터는 `null` 처리합니다.
-        - 로컬스토리지의 용량이 초과 되었을 때 스토리지  `openCacheStorage` 커스텀 모듈을 사용하여 해당 `스토리지를 초기화` 합니다.
+        - 로컬스토리지의 용량이 초과 되어 에러를 발생시킬 때 스토리지  `openCacheStorage` 커스텀 모듈을 사용하여 해당 `스토리지를 초기화` 합니다.
+
+<details>
+  <summary><b>👈코드 보기</b></summary>
+    <div markdown="1">
+        <ul>
+          https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L89-L93
+        </ul>
+    </div>
+</details>
           
+<br/>   
+
 - **변경 된 데이터 값을 적절한 시점에 가져오는 방법**
     - 캐시 된 데이터를 찾았으나 expireTime이 현재 시간 기준 만료 되었다면 리패칭 하여 받아온 데이터로 교체합니다.
-      
+
+<br/>      
+
 - **브라우저 스토리지의 단점 극복**
     - 사용자가 직접 로컬스토리지를 조작하는 경우 `JSON 파싱이 불가`하거나, `루트부터 캐시 된 노드 까지 순회가 불가한 구조`가 될 수 있습니다. 이 경우 `에러 핸들링`을하여 `캐시를 저장하는 스토리지를 초기화` 합니다.
+<details>
+  <summary><b>👈코드 보기</b></summary>
+    <div markdown="1">
+        <ul>
+          https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/localStorage.ts#L1-L15
+        </ul>
+    </div>
+</details>
+
+<br/>
 
 ### 2. 입력별 API 호출 횟수를 줄이는 전략
 - 입력값이 아무것도 없으면 요청하지 않습니다.
 - 디바운싱을 활용해 500ms이상 타이핑이 멈추면 데이터를 요청하도록 유도하여 불필요한 요청을 줄였습니다.
 - 한글의 경우 완전한 음절이 완성되지 않으면(자음/모음만 입력 시) 해당 부분을 필터링하여 요청합니다.
+    <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/containers/SearchContainer.tsx#L20-L31
+            </ul>
+        </div></details>
+  
 - API 요청 결과는 캐싱하고, 이후 동일한 요청이 들어오면 API 요청 대신 캐싱된 값을 활용합니다.(캐싱데이터 expire time: 12시간)
+  <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L146-L187
+            </ul>
+        </div></details>
+  
 
 ### 3. 키보드를 이용한 추천 검색어 기능 사용법
 - 검색어를 입력했을 때 추천 검색어가 없으면, '추천 검색어가 없습니다'라는 문구가 출력됩니다.
 - 추천 검색어가 있는 경우 키보드 위/아래 방향키로 이동 가능하고, 엔터 키를 눌러 검색할 수 있습니다.
+    <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/9ef6d4375164faabf717b3f8a7ccfb8e54b94baf/src/hooks/useKeyboard.ts#L3-L43
+            </ul>
+        </div></details>
 
 ## 화면 구성
 <div align="center" >
