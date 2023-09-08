@@ -15,7 +15,8 @@ const SearchContainer = () => {
     const {state, getRecsSearch, initSearchState} = useRecsSearch();
     const {data, isLoading, error} = state;
     const {onKeydownFocusing, keyBoardFocusingIdx, initFocusingIdx} = useKeyboard(data.length);
-    const searchKeyword = keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
+    const searchKeyword =
+        data.length && keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
     const handleInputValue = (value: string) => {
         setValue(value);
         initFocusingIdx();
