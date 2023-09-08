@@ -146,7 +146,9 @@
 
 ### 2. 프론트엔드 아키텍쳐
 
-추가하기
+<div align="center">
+    <img width="500" alt="3주차_아키텍처_2" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/70276660/98141382-cec6-45af-990f-6ca34c14ed20">
+</div>
 
 ### 3. 주요 기능
 
