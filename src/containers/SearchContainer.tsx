@@ -15,7 +15,8 @@ const SearchContainer = () => {
     const {state, getRecsSearch, initSearchState} = useRecsSearch();
     const {data, isLoading, error} = state;
     const {onKeydownFocusing, keyBoardFocusingIdx, initFocusingIdx} = useKeyboard(data.length);
-    const searchKeyword = keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
+    const searchKeyword =
+        data.length && keyBoardFocusingIdx !== null ? data[keyBoardFocusingIdx].sickNm : value;
     const handleInputValue = (value: string) => {
         setValue(value);
         initFocusingIdx();
@@ -157,18 +158,24 @@ const RecommendContainer = styled.div`
     padding: 20px 0;
     margin-top: 5px;
     width: 490px;
-    border-radius: 15px;
+    border-radius: 30px;
     background-color: #ffffff;
     .noRecommend {
         text-align: center;
         color: #a7afb7;
     }
+    svg {
+        color: gray;
+    }
 `;
 
 const SectionTitle = styled.div`
-    padding: 0 20px;
-    margin: 6px 0;
+    width: 90%;
+    padding: 15px 4px 8px 4px;
+    margin: 6px auto;
+    margin-bottom: 0;
     font-size: 14px;
     font-weight: 700;
     color: #53585d;
+    border-top: 1px solid #e7e7e7;
 `;
