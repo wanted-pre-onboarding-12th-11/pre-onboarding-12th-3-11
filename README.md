@@ -63,14 +63,6 @@
   🔗 https://pre-onboarding-12th-3-11-seven.vercel.app
 
 * 프로젝트 로컬 실행 방법
-    - API 서버 실행 ([저장소 링크](https://github.com/walking-sunset/assignment-api_7th))
-    > API 서버가 실행되어야 정상적으로 작동하므로, 필수로 선행되어야 합니다.
-    ```
-    $ git clone https://github.com/walking-sunset/assignment-api_7th.git
-    $ npm install
-    $ npm start
-    ```
-    - 프론트엔드 실행 
 
     ```
     $ git clone https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11.git
