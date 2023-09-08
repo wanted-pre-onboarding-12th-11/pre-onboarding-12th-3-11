@@ -22,8 +22,9 @@ const SearchContainer = () => {
         initFocusingIdx();
 
         if (value.length) {
+            const validValue = replaceValidKeyword(value);
             debounce(() => {
-                getRecsSearch(replaceValidKeyword(value), EXPIRE_TIME);
+                validValue && getRecsSearch(validValue, EXPIRE_TIME);
             }, INPUT_DEBOUNCE_TIME);
         } else {
             initSearchState();
