@@ -83,33 +83,36 @@
     - [예시]
         1. 사용자 입력 값 (`key`) : `“감”`, 캐싱 된 값(`value`) : `[”감염”, “감염성”, “감시”]`
         2. 사용자 입력 값 (`key`)  : `“감염”` ⇒ key `“감”`의 value를 필터링한 값인 `[”감염”, “감염성”]`를 `“감시”`: `[”감염”, “감염성”]`으로 재 캐싱합니다.
-        - 해당 탐색을 효율적으로 하기 위하여 `Trie` 자료구조를 활용해 캐싱하고 데이터를 찾습니다.
+    - 해당 탐색을 효율적으로 하기 위하여 `Trie` 자료구조를 활용해 캐싱하고 데이터를 찾습니다.
+      <img width="500" alt="Trie 자료 구조" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/68241138/6ded9d7d-63b7-49c3-924b-fa6f01067d23"/>
+
   - 브라우저 캐싱을 활용하여 같은 브라우저를 사용한다면 재접속 할 경우 캐시 데이터 기반으로 데이터를 불러올 수 있도록 합니다.
   - 영문 입력 시 `소문자로 변환`하여 key 값을 찾고, 추가/비교 하여 대소문자 구분 없이 캐시 된 값을 활용할 수 있습니다.
-<details>
-  <summary><b>👈코드 보기</b></summary>
-    <div markdown="1">
-        <ul>
-https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L117-L187
-        </ul>
-    </div>
-</details>
+    <details>
+      <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+    https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L117-L187
+            </ul>
+        </div>
+    </details>
 
 <br/>      
  
 - **저장소의 메모리를 효율적으로 사용하기 위해 고려한 방법**
     - 시간 복잡도 측면에서 강점이 있으나 `메모리 부분에 취약한 Trie 자료구조`를 사용하고, 캐시가 오래 유지되지만 `용량 제한이 있는 로컬 스토리지`를 사용하기 때문에 어떻게 메모리를 효율적으로 관리할지 고민이 필요했습니다.
         - 가비지 컬렉팅 - Trie 자료구조에 새로운 데이터를 추가 할 경우 expireTime과 createdAt 속성을 추가하고, 객체의 루트 부터 인서트 되기 전 노드 까지 `순회 할 때 expireTime`을 확인하여 만료 된 캐시 데이터는 `null` 처리합니다.
+        - `감염성`까지 검색하여 api를 호출하고 인서트할 때 기존 저장된 `감` 데이터의 expireTime을 초과하여 캐시 만료를 확인할 수 있습니다.
+        - <img width="500" alt="스토리지 초기화" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/68241138/d3c97bb5-779c-41d9-99e7-af3e5d50d0bf"/>
         - 로컬스토리지의 용량이 초과 되어 에러를 발생시킬 때 스토리지  `openCacheStorage` 커스텀 모듈을 사용하여 해당 `스토리지를 초기화` 합니다.
-
-<details>
-  <summary><b>👈코드 보기</b></summary>
-    <div markdown="1">
-        <ul>
-          https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L89-L93
-        </ul>
-    </div>
-</details>
+    <details>
+        <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L89-L93
+            </ul>
+        </div>
+    </details>
           
 <br/>   
 
@@ -120,14 +123,22 @@ https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/f
 
 - **브라우저 스토리지의 단점 극복**
     - 사용자가 직접 로컬스토리지를 조작하는 경우 `JSON 파싱이 불가`하거나, `루트부터 캐시 된 노드 까지 순회가 불가한 구조`가 될 수 있습니다. 이 경우 `에러 핸들링`을하여 `캐시를 저장하는 스토리지를 초기화` 합니다.
-<details>
-  <summary><b>👈코드 보기</b></summary>
-    <div markdown="1">
-        <ul>
-          https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/localStorage.ts#L1-L15
-        </ul>
-    </div>
-</details>
+
+    - 로컬 스토리지 조작, 에러메세지, 스토리지 초기화
+      <br/>
+      <img width="500" alt="로털 스토리지 조작" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/68241138/c00cda1a-8476-4a26-89a9-58be54462df1"/>
+      <br/>
+      <img width="500" alt="에러메세지" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/68241138/c1f67e0a-6199-41b7-8eaa-1b573db508f1"/>
+      <br/>
+      <img width="500" alt="스토리지 초기화" src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/68241138/28535a7d-7348-481d-8431-171c7fe11920">
+    <details>
+      <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/localStorage.ts#L1-L15
+            </ul>
+        </div>
+    </details>
 
 <br/>
 
