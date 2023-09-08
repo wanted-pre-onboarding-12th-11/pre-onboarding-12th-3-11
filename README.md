@@ -68,7 +68,9 @@
 - 추천 검색어가 있는 경우 키보드 위/아래 방향키로 이동 가능하고, 엔터 키를 눌러 검색할 수 있습니다.
 
 ## 화면 구성
-
+<div align="center" >
+  <img src="https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/assets/124250465/c8841e8a-f9d4-4b03-b250-2140803da273)" />
+</div>
 
 ## ✨ Best Practice 도출
 
