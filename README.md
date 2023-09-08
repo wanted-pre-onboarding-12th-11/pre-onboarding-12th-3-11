@@ -135,11 +135,34 @@ https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/f
 - 입력값이 아무것도 없으면 요청하지 않습니다.
 - 디바운싱을 활용해 500ms이상 타이핑이 멈추면 데이터를 요청하도록 유도하여 불필요한 요청을 줄였습니다.
 - 한글의 경우 완전한 음절이 완성되지 않으면(자음/모음만 입력 시) 해당 부분을 필터링하여 요청합니다.
+    <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/containers/SearchContainer.tsx#L20-L31
+            </ul>
+        </div></details>
+  
 - API 요청 결과는 캐싱하고, 이후 동일한 요청이 들어오면 API 요청 대신 캐싱된 값을 활용합니다.(캐싱데이터 expire time: 12시간)
+  <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/fca886da3c84a7fb7575d44df6a96b4b5b0ab1a4/src/utils/searchTrieCache.ts#L146-L187
+            </ul>
+        </div></details>
+  
 
 ### 3. 키보드를 이용한 추천 검색어 기능 사용법
 - 검색어를 입력했을 때 추천 검색어가 없으면, '추천 검색어가 없습니다'라는 문구가 출력됩니다.
 - 추천 검색어가 있는 경우 키보드 위/아래 방향키로 이동 가능하고, 엔터 키를 눌러 검색할 수 있습니다.
+    <details>
+    <summary><b>👈코드 보기</b></summary>
+        <div markdown="1">
+            <ul>
+              https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11/blob/9ef6d4375164faabf717b3f8a7ccfb8e54b94baf/src/hooks/useKeyboard.ts#L3-L43
+            </ul>
+        </div></details>
 
 ## 화면 구성
 <div align="center" >
