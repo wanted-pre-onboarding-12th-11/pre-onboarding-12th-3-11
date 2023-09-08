@@ -1,5 +1,26 @@
 # 원티드 프리온보딩 프론트엔드 12차 3주차 과제 - 11팀
 
+## 📖 목차
+
+- [과제 소개](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EA%B3%BC%EC%A0%9C-%EC%86%8C%EA%B0%9C)
+- [팀원 소개](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)
+- [목표 설정](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EB%AA%A9%ED%91%9C-%EC%84%A4%EC%A0%95)
+- [개발 기간](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EA%B0%9C%EB%B0%9C-%EA%B8%B0%EA%B0%84)
+- [팀 노션](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%ED%8C%80-%EB%85%B8%EC%85%98)
+- [시작 가이드](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EC%8B%9C%EC%9E%91-%EA%B0%80%EC%9D%B4%EB%93%9C)
+- [⭐️ 과제 구현 방법 ⭐️](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EF%B8%8F-%EA%B3%BC%EC%A0%9C-%EA%B5%AC%ED%98%84-%EB%B0%A9%EB%B2%95-%EF%B8%8F)
+    1. 로컬 캐싱 구현 방법
+    2. 입력별 API 호출 횟수를 줄이는 전략
+    3. 키보드를 이용한 추천 검색어 기능 사용법
+- [화면 구성](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%ED%99%94%EB%A9%B4-%EA%B5%AC%EC%84%B1)
+- [✨ Best Practice 도출](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#-best-practice-%EB%8F%84%EC%B6%9C)
+    - Best Practice를 위해 고민한 내용들 (토론한 내용 결과, 근거)
+    - 프론트엔드 아키텍쳐
+    - 주요 기능
+    - 트러블 슈팅
+    - 디렉토리 구조
+    - 컨벤션
+- [기술스택](https://github.com/wanted-pre-onboarding-12th-11/pre-onboarding-12th-3-11#%EA%B8%B0%EC%88%A0%EC%8A%A4%ED%83%9D)
 
 ## 과제 소개
 - 검색창 구현 + 검색어 추천 기능 구현 + 캐싱 기능 구현 + Best Practice 도출
