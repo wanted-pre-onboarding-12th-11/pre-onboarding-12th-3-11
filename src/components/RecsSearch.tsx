@@ -31,7 +31,7 @@ const RecsSearch = ({title, selected = false, searchValue}: RecsSearchTypes) => 
 export default RecsSearch;
 
 const RecommendItem = styled.div`
-    padding: 10px 20px;
+    padding: 10px 25px;
     display: flex;
     align-items: center;
     cursor: pointer;
