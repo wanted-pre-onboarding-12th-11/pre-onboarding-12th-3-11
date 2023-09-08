@@ -46,7 +46,7 @@ const SearchContainer = () => {
             </HomeHeader>
             <SearchSection>
                 <SearchBarContainer onSubmit={handleOnSubmit}>
-                    <SearchIcon size={21} />
+                    <SearchIcon size={16} />
                     <input
                         value={value}
                         type='text'
@@ -55,7 +55,7 @@ const SearchContainer = () => {
                         placeholder='질환명을 입력해 주세요.'
                     />
                     <button type='submit'>
-                        <SearchIcon size={16} />
+                        <SearchIcon size={21} />
                     </button>
                 </SearchBarContainer>
                 <RecommendContainer>
@@ -96,7 +96,7 @@ const HomeContainer = styled.main`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 200px;
+    margin-top: 100px;
 `;
 const HomeHeader = styled.h1`
     text-align: center;
@@ -114,13 +114,21 @@ const SearchSection = styled.section`
 `;
 const SearchBarContainer = styled.form`
     width: 490px;
-    height: 50px;
+    height: 75px;
     background-color: #ffffff;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 10px 10px 25px;
     border-radius: 50px;
     border: none;
+    box-sizing: border-box;
+
+    & > svg {
+        color: gray;
+        flex: none;
+    }
+
     input {
         width: 100%;
         border: none;
@@ -134,12 +142,13 @@ const SearchBarContainer = styled.form`
         border: 0;
         cursor: pointer;
         border-radius: 100%;
-        width: 48px;
+        width: 55px;
         height: 48px;
         font-weight: 500;
         display: flex;
         justify-content: center;
         align-items: center;
+        box-sizing: border-box;
     }
 `;
 
