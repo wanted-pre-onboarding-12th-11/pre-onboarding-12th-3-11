@@ -43,6 +43,7 @@ const useRecsSearch = () => {
     const [state, dispatch] = useReducer(reducer, initState);
 
     const getRecsSearch = useCallback(async (queryKey: string, expireTime: number) => {
+        dispatch({type: 'FETCHING'});
         const cachedData = getCacheData(queryKey);
         if (cachedData) {
             return dispatch({type: 'GET', payload: cachedData});
